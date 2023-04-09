@@ -25,7 +25,6 @@ from varken.iniparser import INIParser
 from varken.dbmanager import DBManager
 from varken.helpers import GeoIPHandler
 from varken.tautulli import TautulliAPI
-from varken.sickchill import SickChillAPI
 from varken.varkenlogger import VarkenLogger
 
 
@@ -170,13 +169,6 @@ if __name__ == "__main__":
                 at_time.do(thread, OVERSEER.get_latest_requests).tag("overseerr-{}-get_latest_requests"
                                                                      .format(server.id))
 
-    if CONFIG.sickchill_enabled:
-        for server in CONFIG.sickchill_servers:
-            SICKCHILL = SickChillAPI(server, DBMANAGER)
-            if server.get_missing:
-                at_time = schedule.every(server.get_missing_run_seconds).seconds
-                at_time.do(thread, SICKCHILL.get_missing).tag("sickchill-{}-get_missing".format(server.id))
-
     if CONFIG.unifi_enabled:
         for server in CONFIG.unifi_servers:
             UNIFI = UniFiAPI(server, DBMANAGER)
@@ -185,8 +177,7 @@ if __name__ == "__main__":
 
     # Run all on startup
     SERVICES_ENABLED = [CONFIG.ombi_enabled, CONFIG.radarr_enabled, CONFIG.tautulli_enabled, CONFIG.unifi_enabled,
-                        CONFIG.sonarr_enabled, CONFIG.sickchill_enabled, CONFIG.lidarr_enabled,
-                        CONFIG.overseerr_enabled]
+                        CONFIG.sonarr_enabled, CONFIG.lidarr_enabled, CONFIG.overseerr_enabled]
     if not [enabled for enabled in SERVICES_ENABLED if enabled]:
         vl.logger.error("All services disabled. Exiting")
         exit(1)
