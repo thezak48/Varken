@@ -81,15 +81,6 @@ class TautulliServer(NamedTuple):
     maxmind_license_key: str = None
 
 
-class SickChillServer(NamedTuple):
-    api_key: str = None
-    get_missing: bool = False
-    get_missing_run_seconds: int = 30
-    id: int = None
-    url: str = None
-    verify_ssl: bool = False
-
-
 class UniFiServer(NamedTuple):
     get_usg_stats_run_seconds: int = 30
     id: int = None
@@ -368,24 +359,6 @@ class RadarrQueue(NamedTuple):
     outputPath: str = None
     movie: RadarrMovie = None
     timeleft: str = None
-
-
-# Sickchill
-class SickChillTVShow(NamedTuple):
-    airdate: str = None
-    airs: str = None
-    episode: int = None
-    ep_name: str = None
-    ep_plot: str = None
-    indexerid: int = None
-    network: str = None
-    paused: int = None
-    quality: str = None
-    season: int = None
-    show_name: str = None
-    show_status: str = None
-    tvdbid: int = None
-    weekday: int = None
 
 
 # Tautulli

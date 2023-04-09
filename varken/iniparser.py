@@ -7,7 +7,7 @@ from re import match, compile, IGNORECASE
 from configparser import ConfigParser, NoOptionError, NoSectionError
 
 from varken.varkenlogger import BlacklistFilter
-from varken.structures import SickChillServer, UniFiServer
+from varken.structures import UniFiServer
 from varken.helpers import clean_sid_check, rfc1918_ip_check, boolcheck
 from varken.structures import SonarrServer, RadarrServer, OmbiServer, OverseerrServer, TautulliServer, InfluxServer
 
@@ -17,7 +17,7 @@ class INIParser(object):
         self.config = None
         self.data_folder = data_folder
         self.filtered_strings = None
-        self.services = ['sonarr', 'radarr', 'lidarr', 'ombi', 'overseerr', 'tautulli', 'sickchill', 'unifi']
+        self.services = ['sonarr', 'radarr', 'lidarr', 'ombi', 'overseerr', 'tautulli', 'unifi']
 
         self.logger = getLogger()
         self.influx_server = InfluxServer()
@@ -313,17 +313,6 @@ class INIParser(object):
                                                      request_total_run_seconds=request_total_run_seconds,
                                                      num_latest_requests_to_fetch=num_latest_requests_to_fetch,
                                                      num_latest_requests_seconds=num_latest_requests_seconds)
-
-                        if service == 'sickchill':
-                            get_missing = boolcheck(env.get(f'VRKN_{envsection}_GET_MISSING',
-                                                            self.config.get(section, 'get_missing')))
-                            get_missing_run_seconds = int(env.get(
-                                f'VRKN_{envsection}_GET_MISSING_RUN_SECONDS',
-                                self.config.getint(section, 'get_missing_run_seconds')))
-
-                            server = SickChillServer(id=server_id, url=scheme + url, api_key=apikey,
-                                                     verify_ssl=verify_ssl, get_missing=get_missing,
-                                                     get_missing_run_seconds=get_missing_run_seconds)
 
                         if service == 'unifi':
                             username = env.get(f'VRKN_{envsection}_USERNAME', self.config.get(section, 'username'))
