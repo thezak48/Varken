@@ -244,6 +244,7 @@ class SonarrTVShow(NamedTuple):
     tvMazeId: int = None
     tvRageId: int = None
     useSceneNumbering: bool = None
+    originalLanguage: str = None
     year: int = None
 
 
@@ -266,16 +267,18 @@ class SonarrEpisode(NamedTuple):
     sceneEpisodeNumber: int = None
     sceneSeasonNumber: int = None
     series: SonarrTVShow = None
+    runtime: int = None
     tvdbId: int = None
 
 
 class SonarrQueue(NamedTuple):
+    customFormats: list = None
     downloadClient: str = None
     downloadId: str = None
     episodeId: int = None
     id: int = None
     indexer: str = None
-    language: dict = None
+    languages: list = None
     protocol: str = None
     quality: dict = None
     size: float = None
@@ -286,12 +289,14 @@ class SonarrQueue(NamedTuple):
     trackedDownloadState: str = None
     trackedDownloadStatus: str = None
     seriesId: int = None
+    seasonNumber: int = None
     errorMessage: str = None
     outputPath: str = None
     series: SonarrTVShow = None
     episode: SonarrEpisode = None
     timeleft: str = None
     estimatedCompletionTime: str = None
+    episodeHasFile: bool = None
 
 
 # Radarr
@@ -324,6 +329,7 @@ class RadarrMovie(NamedTuple):
     secondaryYearSourceId: int = None
     sizeOnDisk: float = None
     sortTitle: str = None
+    statistics: dict = None
     status: str = None
     studio: str = None
     tags: list = None
@@ -629,6 +635,7 @@ class LidarrAlbum(NamedTuple):
     disambiguation: str = None
     overview: str = None
     artistId: int = None
+    grabbed: bool = None
     foreignAlbumId: str = None
     monitored: bool = None
     anyReleaseOk: bool = None

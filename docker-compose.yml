@@ -15,13 +15,13 @@ services:
   varken:
     hostname: varken
     container_name: varken
-    image: boerderij/varken
+    image: ghcr.io/thezak48/varken
     networks:
       - internal
     volumes:
       - /path/to/docker-varken/config-folder:/config
     environment:
-      - TZ=America/Chicago
+      - TZ=Europe/London
     depends_on:
       - influxdb
     restart: unless-stopped
