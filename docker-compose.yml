@@ -1,7 +1,9 @@
 version: '3'
+
 networks:
   internal:
     driver: bridge
+
 services:
   influxdb:
     hostname: influxdb
@@ -12,10 +14,11 @@ services:
     volumes:
       - /path/to/docker-influxdb/config-folder:/var/lib/influxdb
     restart: unless-stopped
+
   varken:
     hostname: varken
     container_name: varken
-    image: ghcr.io/thezak48/varken
+    image: ghcr.io/thezak48/varken:develop
     networks:
       - internal
     volumes:
@@ -25,6 +28,7 @@ services:
     depends_on:
       - influxdb
     restart: unless-stopped
+
   grafana:
     hostname: grafana
     container_name: grafana
@@ -39,7 +43,7 @@ services:
       - GF_PATHS_DATA=/config/data
       - GF_PATHS_LOGS=/config/logs
       - GF_PATHS_PLUGINS=/config/plugins
-      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
     depends_on:
       - influxdb
       - varken
