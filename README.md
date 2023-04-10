@@ -5,8 +5,17 @@
 [![pipeline status](https://github.com/thezak48/varken/actions/workflows/build.yml/badge.svg)](https://gitlab.com/boerderij/Varken/commits/master)
 
 *Due to the lack of updates in the original project this is just a bandaid fix*
+<br />
 
-**The Original Things**
+# Notice
+The Grafana Dashbard included has been updated to work with multiple arr's and Overseerr. It has also been updated to use the new panels from Grafana v9.x
+
+<br /> 
+
+***
+
+## **The Original Things**
+<br />
 
 [![pipeline status](https://gitlab.com/boerderij/Varken/badges/master/pipeline.svg)](https://gitlab.com/boerderij/Varken/commits/master)
 [![Discord](https://img.shields.io/discord/518970285773422592.svg?colorB=7289DA&label=Discord&logo=Discord&logoColor=7289DA&style=flat-square)](https://discord.gg/VjZ6qSM)
