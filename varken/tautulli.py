@@ -229,7 +229,7 @@ class TautulliAPI(object):
     def get_historical(self, days=30):
         influx_payload = []
         start_date = date.today() - timedelta(days=days)
-        params = {'cmd': 'get_history', 'grouping': 1, 'length': 1000000}
+        params = {'cmd': 'get_history', 'grouping': 1, 'length': 1000}
         req = self.session.prepare_request(Request('GET', self.server.url + self.endpoint, params=params))
         g = connection_handler(self.session, req, self.server.verify_ssl)
 
