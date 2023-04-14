@@ -168,6 +168,10 @@ if __name__ == "__main__":
                 at_time = schedule.every(server.num_latest_requests_seconds).seconds
                 at_time.do(thread, OVERSEER.get_latest_requests).tag("overseerr-{}-get_latest_requests"
                                                                      .format(server.id))
+            if server.num_total_issue_counts > 0:
+                at_time = schedule.every(server.num_total_issue_counts).seconds
+                at_time.do(thread, OVERSEER.get_issue_counts).tag("overseerr-{}-get_issue_counts"
+                                                                     .format(server.id))
 
     if CONFIG.unifi_enabled:
         for server in CONFIG.unifi_servers:

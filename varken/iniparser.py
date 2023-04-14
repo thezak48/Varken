@@ -306,13 +306,17 @@ class INIParser(object):
                             num_latest_requests_seconds = int(env.get(
                                 f'VRKN_{envsection}_NUM_LATEST_REQUESTS_SECONDS',
                                 self.config.getint(section, 'num_latest_requests_seconds')))
+                            num_total_issue_counts = int(env.get(
+                                f'VRKN_{envsection}_num_total_issue_counts',
+                                self.config.getint(section, 'num_total_issue_counts')))
 
                             server = OverseerrServer(id=server_id, url=scheme + url, api_key=apikey,
                                                      verify_ssl=verify_ssl,
                                                      get_request_total_counts=get_request_total_counts,
                                                      request_total_run_seconds=request_total_run_seconds,
                                                      num_latest_requests_to_fetch=num_latest_requests_to_fetch,
-                                                     num_latest_requests_seconds=num_latest_requests_seconds)
+                                                     num_latest_requests_seconds=num_latest_requests_seconds,
+                                                     num_total_issue_counts=num_total_issue_counts)
 
                         if service == 'unifi':
                             username = env.get(f'VRKN_{envsection}_USERNAME', self.config.get(section, 'username'))

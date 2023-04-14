@@ -3,7 +3,7 @@ from requests import Session, Request
 from datetime import datetime, timezone
 
 from varken.helpers import connection_handler, hashit
-from varken.structures import OverseerrRequestCounts
+from varken.structures import OverseerrRequestCounts, OverseerrIssuesCounts
 
 
 class OverseerrAPI(object):
@@ -126,6 +126,36 @@ class OverseerrAPI(object):
                         }
                     }
                 )
+
+    def get_issue_counts(self):
+        now = datetime.now(timezone.utc).astimezone().isoformat()
+        endpoint = '/api/v1/issue/count'
+
+        req = self.session.prepare_request(Request('GET', self.server.url + endpoint))
+        get = connection_handler(self.session, req, self.server.verify_ssl)
+
+        if not get:
+            return
+
+        issues = OverseerrIssuesCounts(**get)
+        influx_payload = [
+            {
+                "measurement": "Overseerr",
+                "tags": {
+                    "type": "Issues_Counts"
+                },
+                "time": now,
+                "fields": {
+                    "total": issues.total,
+                    "video": issues.video,
+                    "audio": issues.audio,
+                    "subtitles": issues.subtitles,
+                    "others": issues.others,
+                    "open": issues.open,
+                    "closed": issues.closed
+                }
+            }
+        ]
 
         if influx_payload:
             self.dbmanager.write_points(influx_payload)

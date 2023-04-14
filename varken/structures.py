@@ -66,6 +66,7 @@ class OverseerrServer(NamedTuple):
     request_total_run_seconds: int = 30
     num_latest_requests_to_fetch: int = 10
     num_latest_requests_seconds: int = 30
+    num_total_issue_counts: int = 300
 
 
 class TautulliServer(NamedTuple):
@@ -186,7 +187,7 @@ class OmbiMovieRequest(NamedTuple):
     title: str = None
 
 
-# Overseerr
+# Overseerr Structures
 class OverseerrRequestCounts(NamedTuple):
     pending: int = None
     approved: int = None
@@ -196,6 +197,15 @@ class OverseerrRequestCounts(NamedTuple):
     movie: int = None
     tv: int = None
     declined: int = None
+
+class OverseerrIssuesCounts(NamedTuple):
+    total: int = 0
+    video: int = 0
+    audio: int = 0
+    subtitles: int = 0
+    others: int = 0
+    open: int = 0
+    closed: int = 0
 
 
 # Sonarr
