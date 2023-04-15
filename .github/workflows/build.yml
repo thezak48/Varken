@@ -4,11 +4,9 @@ on:
   push:
     branches: 
       - 'develop'
+      - 'influxdbv2'
     tags:
       - 'v*.*.*'
-  pull_request:
-    branches: 
-      - 'develop'
 
 jobs:
 
