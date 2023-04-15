@@ -55,10 +55,7 @@ class DBManager(object):
         if not self.influx.buckets_api().find_bucket_by_name(self.bucket):
             self.logger.info("Creating varken bucket")
 
-            retention = BucketRetentionRules(type="expire", every_seconds=60 * 60 * 24 * 30,
-                                             shard_group_duration_seconds=60 * 60)
-            self.influx.buckets_api().create_bucket(bucket_name=self.bucket,
-                                                    retention_rules=retention)
+            self.influx.buckets_api().create_bucket(bucket_name=self.bucket)
 
     def create_v1_database(self):
         from influxdb import InfluxDBClient
