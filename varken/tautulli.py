@@ -187,6 +187,37 @@ class TautulliAPI(object):
 
         self.dbmanager.write_points(influx_payload)
 
+    def get_libraries(self):
+        now = datetime.now(timezone.utc).astimezone().isoformat()
+        influx_payload = []
+        params = {'cmd': 'get_libraries'}
+
+        req = self.session.prepare_request(Request('GET', self.server.url + self.endpoint, params=params))
+        g = connection_handler(self.session, req, self.server.verify_ssl)
+
+        if not g:
+            return
+
+        get = g['response']['data']
+
+        for library in get:
+            data = {
+                    "measurement": "Tautulli",
+                    "tags": {
+                        "type": "library_stats",
+                        "server": self.server.id,
+                        "name": library['section_name'],
+                        "section_type": library['section_type']
+                    },
+                    "time": now,
+                    "fields": {
+                        "libraries": str(library['section_name'])
+                    }
+            }
+            influx_payload.append(data)
+        
+        self.dbmanager.write_points(influx_payload)
+
     def get_stats(self):
         now = datetime.now(timezone.utc).astimezone().isoformat()
         influx_payload = []

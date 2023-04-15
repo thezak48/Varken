@@ -112,6 +112,9 @@ if __name__ == "__main__":
         schedule.every(12).to(24).hours.do(thread, GEOIPHANDLER.update)
         for server in CONFIG.tautulli_servers:
             TAUTULLI = TautulliAPI(server, DBMANAGER, GEOIPHANDLER)
+            if server.get_libraries:
+                at_time = schedule.every(server.get_libraries_run_days).days
+                at_time.do(thread, TAUTULLI.get_libraries).tag("tautulli-{}-get_libraries".format(server.id))
             if server.get_activity:
                 at_time = schedule.every(server.get_activity_run_seconds).seconds
                 at_time.do(thread, TAUTULLI.get_activity).tag("tautulli-{}-get_activity".format(server.id))

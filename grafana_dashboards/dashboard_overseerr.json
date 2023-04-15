@@ -4991,73 +4991,49 @@
   "templating": {
     "list": [
       {
-        "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
+        "current": {},
+        "datasource": {
+          "type": "influxdb",
+          "uid": "${DS_INFLUXDB_VARKEN}"
         },
+        "definition": "SELECT distinct(\"libraries\") FROM \"Tautulli\" WHERE (\"section_type\" = 'movie') AND $timeFilter GROUP BY \"name\"",
         "hide": 0,
         "includeAll": true,
-        "label": "Movies Library Name",
+        "label": "Movies Library",
         "multi": true,
         "name": "movieslibrary",
-        "options": [
-          {
-            "selected": true,
-            "text": "All",
-            "value": "$__all"
-          },
-          {
-            "selected": false,
-            "text": "Movies",
-            "value": "Movies"
-          }
-        ],
-        "query": "Movies",
-        "queryValue": "",
+        "options": [],
+        "query": "SELECT distinct(\"libraries\") FROM \"Tautulli\" WHERE (\"section_type\" = 'movie') AND $timeFilter GROUP BY \"name\"",
+        "refresh": 1,
+        "regex": "",
         "skipUrlSync": false,
-        "type": "custom"
+        "sort": 0,
+        "type": "query"
       },
       {
-        "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
+        "current": {},
+        "datasource": {
+          "type": "influxdb",
+          "uid": "${DS_INFLUXDB_VARKEN}"
         },
+        "definition": "SELECT distinct(\"libraries\") FROM \"Tautulli\" WHERE (\"section_type\" = 'show') AND $timeFilter GROUP BY \"name\"",
         "hide": 0,
         "includeAll": true,
-        "label": "TV Library Name",
+        "label": "TV Library",
         "multi": true,
         "name": "tvlibrary",
-        "options": [
-          {
-            "selected": true,
-            "text": "All",
-            "value": "$__all"
-          },
-          {
-            "selected": false,
-            "text": "TV Shows",
-            "value": "TV Shows"
-          }
-        ],
-        "query": "TV Shows",
-        "queryValue": "",
+        "options": [],
+        "query": "SELECT distinct(\"libraries\") FROM \"Tautulli\" WHERE (\"section_type\" = 'show') AND $timeFilter GROUP BY \"name\"",
+        "refresh": 1,
+        "regex": "",
         "skipUrlSync": false,
-        "type": "custom"
+        "sort": 0,
+        "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-5y",
+    "from": "now-30d",
     "to": "now"
   },
   "timepicker": {
