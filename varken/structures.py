@@ -307,6 +307,7 @@ class RadarrMovie(NamedTuple):
     certification: str = None
     cleanTitle: str = None
     collection: dict = None
+    customFormatScore: str = None
     digitalRelease: str = None
     folderName: str = None
     genres: list = None
@@ -325,6 +326,7 @@ class RadarrMovie(NamedTuple):
     physicalRelease: str = None
     qualityProfileId: int = None
     ratings: dict = None
+    rootFolderPath: str = None
     runtime: int = None
     secondaryYear: int = None
     secondaryYearSourceId: int = None
