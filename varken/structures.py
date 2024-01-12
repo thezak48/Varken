@@ -43,6 +43,14 @@ class RadarrServer(NamedTuple):
     url: str = None
     verify_ssl: bool = False
 
+#TODO - Lidarr support
+#class LidarrServer(NamedTuple):
+#    api_key: str = None
+#    id: int = None
+#    queue: bool = False
+#    queue_run_seconds: int = 30
+#    url: str = None
+#    verify_ssl: bool = False
 
 class OmbiServer(NamedTuple):
     api_key: str = None
@@ -187,25 +195,26 @@ class OmbiMovieRequest(NamedTuple):
     title: str = None
 
 
-# Overseerr Structures
+# Overseerr /api/v1/request/count
 class OverseerrRequestCounts(NamedTuple):
-    pending: int = None
     approved: int = None
-    processing: int = None
     available: int = None
-    total: int = None
-    movie: int = None
-    tv: int = None
     declined: int = None
+    movie: int = None
+    pending: int = None
+    processing: int = None
+    total: int = None
+    tv: int = None
 
+# Overseerr /api/v1/issue/count
 class OverseerrIssuesCounts(NamedTuple):
+    audio: int = 0
+    closed: int = 0
+    open: int = 0
+    others: int = 0
+    subtitles: int = 0
     total: int = 0
     video: int = 0
-    audio: int = 0
-    subtitles: int = 0
-    others: int = 0
-    open: int = 0
-    closed: int = 0
 
 # Sonarr /api/v3/series
 class SonarrTVShow(NamedTuple):
@@ -223,7 +232,7 @@ class SonarrTVShow(NamedTuple):
     id: int = None
     images: list = None
     imdbId: str = None
-    # languageProfileId: int = None # Deprecated, may or may not while disabled
+    languageProfileId: int = None # Deprecated, varken still expects this value
     lastAired: str = None # May or may not work
     monitored: bool = None
     monitorNewItems: str = None # May or may not work
@@ -283,7 +292,7 @@ class SonarrEpisode(NamedTuple):
     tvdbId: int = None
     unverifiedSceneNumbering: bool = None
 
-# Sonarr /api/v3/queue/details
+# Sonarr /api/v3/queue
 class SonarrQueue(NamedTuple):
     customFormats: list = None
     customFormatScore: int = None
@@ -312,7 +321,7 @@ class SonarrQueue(NamedTuple):
     trackedDownloadState: str = None
     trackedDownloadStatus: str = None
 
-# Radarr
+# Radarr /api/v3/movie
 class RadarrMovie(NamedTuple):
     added: str = None
     addOptions: str = None
@@ -359,11 +368,8 @@ class RadarrMovie(NamedTuple):
     website: str = None
     year: int = None
     youTubeTrailerId: str = None
-    
-    
 
-
-# Radarr Queue Details /api/v3/queue/details
+# Radarr Queue Details /api/v3/queue
 class RadarrQueue(NamedTuple):
     customFormats: list = None
     customFormatScore: int = None # May or May not work
@@ -390,6 +396,7 @@ class RadarrQueue(NamedTuple):
 
 # Tautulli
 class TautulliStream(NamedTuple):
+    # get_activity
     actors: list = None
     added_at: str = None
     allow_guest: int = None
@@ -411,22 +418,26 @@ class TautulliStream(NamedTuple):
     banner: str = None
     bif_thumb: str = None
     bitrate: str = None
-    channel_icon: str = None
+    channel_call_sign: str = None # May or may not work
+    channel_identifier: str = None # May or may not work
+    #channel_icon: str = None # Not listed in Tautulli API reference
     channel_stream: int = None
-    channel_title: str = None
+    channel_thumb: str = None
+    # channel_title: str = None # Not listed in Tautulli API reference
     children_count: str = None
     collections: list = None
     container: str = None
+    container_decision: str = None # May or may not work
     content_rating: str = None
-    current_session: str = None
-    date: str = None
+    # current_session: str = None # Not listed in Tautulli API reference
+    # date: str = None # Not listed in Tautulli API reference
     deleted_user: int = None
     device: str = None
     directors: list = None
     do_notify: int = None
     duration: str = None
     email: str = None
-    extra_type: str = None
+    # extra_type: str = None # Not listed in Tautulli API reference
     file: str = None
     file_size: str = None
     friendly_name: str = None
@@ -436,8 +447,8 @@ class TautulliStream(NamedTuple):
     grandparent_rating_key: str = None
     grandparent_thumb: str = None
     grandparent_title: str = None
-    group_count: int = None
-    group_ids: str = None
+    # group_count: int = None # Not listed in Tautulli API reference
+    # group_ids: str = None # Not listed in Tautulli API reference
     guid: str = None
     height: str = None
     id: str = None
@@ -469,13 +480,13 @@ class TautulliStream(NamedTuple):
     parent_rating_key: str = None
     parent_thumb: str = None
     parent_title: str = None
-    paused_counter: int = None
-    percent_complete: int = None
+    # paused_counter: int = None # Not listed in Tautulli API reference
+    # percent_complete: int = None # Not listed in Tautulli API reference
     platform: str = None
     platform_name: str = None
     platform_version: str = None
     player: str = None
-    pre_tautulli: str = None
+    # pre_tautulli: str = None # Not listed in Tautulli API reference
     product: str = None
     product_version: str = None
     profile: str = None
@@ -484,20 +495,20 @@ class TautulliStream(NamedTuple):
     rating: str = None
     rating_image: str = None
     rating_key: str = None
-    reference_id: int = None
+    # reference_id: int = None # Not listed in Tautulli API reference
     relay: int = None
-    relayed: int = None
-    row_id: int = None
+    # relayed: int = None # Not listed in Tautulli API reference
+    # row_id: int = None # Not listed in Tautulli API reference
     section_id: str = None
     secure: str = None
-    selected: int = None
+    # selected: int = None # Not listed in Tautulli API reference
     session_id: str = None
     session_key: str = None
     shared_libraries: list = None
     sort_title: str = None
-    started: int = None
+    # started: int = None # Not listed in Tautulli API reference
     state: str = None
-    stopped: int = None
+    # stopped: int = None # Not listed in Tautulli API reference
     stream_aspect_ratio: str = None
     stream_audio_bitrate: str = None
     stream_audio_bitrate_mode: str = None
@@ -523,8 +534,13 @@ class TautulliStream(NamedTuple):
     stream_subtitle_location: str = None
     stream_video_bit_depth: str = None
     stream_video_bitrate: str = None
+    stream_video_chroma_subsampling: str = None # May or may not work
     stream_video_codec: str = None
     stream_video_codec_level: str = None
+    stream_video_color_primaries: str = None # May or may not work
+    stream_video_color_range: str = None # May or may not work
+    stream_video_color_space: str = None # May or may not work
+    stream_video_color_trc: str = None # May or may not work
     stream_video_decision: str = None
     stream_video_dynamic_range: str = None
     stream_video_framerate: str = None
@@ -537,7 +553,7 @@ class TautulliStream(NamedTuple):
     stream_video_scan_type: str = None
     stream_video_width: str = None
     studio: str = None
-    sub_type: str = None
+    # sub_type: str = None # Not listed in Tautulli API reference
     subtitle_codec: str = None
     subtitle_container: str = None
     subtitle_decision: str = None
@@ -583,8 +599,13 @@ class TautulliStream(NamedTuple):
     username: str = None
     video_bit_depth: str = None
     video_bitrate: str = None
+    video_chroma_subsampling: str = None # May or may not work
     video_codec: str = None
     video_codec_level: str = None
+    video_color_primaries: str = None # May or may not work
+    video_color_range: str = None # May or may not work
+    video_color_space: str = None # May or may not work
+    video_color_trc: str = None # May or may not work
     video_decision: str = None
     video_dynamic_range: str = None
     video_frame_rate: str = None
@@ -599,58 +620,104 @@ class TautulliStream(NamedTuple):
     video_scan_type: str = None
     video_width: str = None
     view_offset: str = None
-    watched_status: int = None
+    # watched_status: int = None # Not listed in Tautulli API reference
     width: str = None
     writers: list = None
     year: str = None
 
-
-# Lidarr
-class LidarrQueue(NamedTuple):
-    artistId: int = None
-    albumId: int = None
-    language: dict = None
-    quality: dict = None
-    size: float = None
-    title: str = None
-    timeleft: str = None
-    sizeleft: float = None
-    status: str = None
-    trackedDownloadStatus: str = None
-    trackedDownloadState: str = None
-    statusMessages: list = None
-    errorMessage: str = None
-    downloadId: str = None
-    protocol: str = None
-    downloadClient: str = None
-    indexer: str = None
-    outputPath: str = None
-    downloadForced: bool = None
-    id: int = None
-    estimatedCompletionTime: str = None
-
-
+# Lidarr /api/v1/album
 class LidarrAlbum(NamedTuple):
-    title: str = None
-    disambiguation: str = None
-    overview: str = None
-    artistId: int = None
-    grabbed: bool = None
-    foreignAlbumId: str = None
-    monitored: bool = None
-    anyReleaseOk: bool = None
-    profileId: int = None
-    duration: int = None
+    addOptions: dict = None
     albumType: str = None
-    secondaryTypes: list = None
-    mediumCount: int = None
-    ratings: dict = None
-    releaseDate: str = None
-    releases: list = None
-    genres: list = None
-    media: list = None
+    anyReleaseOk: bool = None
     artist: dict = None
+    # artist: LidarrArtist = None | #TODO - Lidarr support
+    artistId: int = None
+    disambiguation: str = None
+    duration: int = None
+    foreignAlbumId: str = None
+    genres: list = None
+    grabbed: bool = None
+    id: int = None
     images: list = None
     links: list = None
+    media: list = None
+    mediumCount: int = None
+    monitored: bool = None
+    overview: str = None
+    profileId: int = None
+    ratings: dict = None
+    releases: list = None
+    releaseDate: str = None
+    remoteCover: str = None
+    secondaryTypes: list = None
     statistics: dict = {}
+    title: str = None
+    
+#TODO - Lidarr support
+# Lidarr /api/v1/artist
+#class LidarrArtist(NamedTuple):
+#    added: str = None
+#    addOptions: dict = None
+#    allMusicId: str = None
+#    artistMetadataId: int = None
+#    artistName: str = None
+#    artistType: str = None
+#    cleanName: str = None
+#    disambiguation: str = None
+#    discogsId: int = None
+#    ended: bool = None
+#    folder: str = None
+#    foreignArtistId: str = None
+#    genres: list = None
+#    id: int = None
+#    images: list = None
+#    lastAlbum: LidarrAlbum = None
+#    links: list = None
+#    mbId: str = None
+#    members: list = None
+#    metadataProfileId: int = None
+#    monitored: bool = None
+#    monitorNewItems: str = None
+#    nextAlbum: LidarrAlbum = None
+#    overview: str = None
+#    path: str = None
+#    qualityProfileId: int = None
+#    ratings: dict = None
+#    remotePoster: str = None
+#    rootFolderPath: str = None
+#    sortName: str = None
+#    statistics: dict = None
+#    status: str = None
+#    tadbId: int = None
+#    tags: list = None
+
+# Lidarr /api/v1/queue
+class LidarrQueue(NamedTuple):
+    album: LidarrAlbum = None
+    albumId: int = None
+    artist: dict = None
+    #artist: LidarrArtist = None | #TODO - Lidarr support
+    artistId: int = None
+    customFormats: list = None
+    customFormatScore: int = None
+    downloadClient: str = None
+    downloadForced: bool = None
+    downloadId: str = None
+    errorMessage: str = None
+    estimatedCompletionTime: str = None
     id: int = None
+    indexer: str = None
+    # language: dict = None # Not defined in the /api/v1/queue endpoint reference.
+    outputPath: str = None
+    protocol: str = None
+    quality: dict = None
+    size: float = None
+    status: str = None
+    statusMessages: list = None
+    sizeleft: float = None
+    timeleft: str = None
+    title: str = None
+    trackedDownloadState: str = None
+    trackedDownloadStatus: str = None
+
