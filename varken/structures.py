@@ -362,7 +362,7 @@ class RadarrMovie(NamedTuple):
     secondaryYearSourceId: int = None
     sizeOnDisk: float = None
     sortTitle: str = None
-    # statistics: dict = None # Deprecated, may or may not work while disabled
+    statistics: dict = None # Deprecated, may or may not work while disabled
     status: str = None
     studio: str = None
     tags: list = None
