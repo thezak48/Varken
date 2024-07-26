@@ -261,6 +261,7 @@ class SonarrTVShow(NamedTuple):
     tags: list = None
     title: str = None
     titleSlug: str = None
+    tmdbId: int = None
     tvdbId: int = None
     tvMazeId: int = None
     tvRageId: int = None
@@ -298,6 +299,7 @@ class SonarrEpisode(NamedTuple):
 
 # Sonarr /api/v3/queue
 class SonarrQueue(NamedTuple):
+    added: str = None
     customFormats: list = None
     customFormatScore: int = None
     downloadClient: str = None
@@ -324,6 +326,7 @@ class SonarrQueue(NamedTuple):
     title: str = None
     trackedDownloadState: str = None
     trackedDownloadStatus: str = None
+    downloadClientHasPostImportCategory: bool = None
 
 # Radarr /api/v3/movie
 class RadarrMovie(NamedTuple):
@@ -372,9 +375,11 @@ class RadarrMovie(NamedTuple):
     website: str = None
     year: int = None
     youTubeTrailerId: str = None
+    movieFileId: int = None
 
 # Radarr Queue Details /api/v3/queue
 class RadarrQueue(NamedTuple):
+    added: str = None
     customFormats: list = None
     customFormatScore: int = None # May or May not work
     downloadClient: str = None
@@ -397,6 +402,7 @@ class RadarrQueue(NamedTuple):
     title: str = None
     trackedDownloadState: str = None
     trackedDownloadStatus: str = None
+    downloadClientHasPostImportCategory: bool = None
 
 # Tautulli
 class TautulliStream(NamedTuple):
@@ -699,6 +705,7 @@ class LidarrAlbum(NamedTuple):
 
 # Lidarr /api/v1/queue
 class LidarrQueue(NamedTuple):
+    added: str = None
     album: LidarrAlbum = None
     albumId: int = None
     artist: dict = None
@@ -725,4 +732,6 @@ class LidarrQueue(NamedTuple):
     title: str = None
     trackedDownloadState: str = None
     trackedDownloadStatus: str = None
-
+    downloadClientHasPostImportCategory: bool = None
+    trackFileCount: int = None
+    trackHasFileCount: int = None
