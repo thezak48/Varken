@@ -374,7 +374,7 @@ class RadarrMovie(NamedTuple):
     year: int = None
     youTubeTrailerId: str = None
     movieFileId: int = None
-    requestedDate: str = None
+    releaseDate: str = None
 
 # Radarr Queue Details /api/v3/queue
 class RadarrQueue(NamedTuple):
@@ -402,6 +402,7 @@ class RadarrQueue(NamedTuple):
     trackedDownloadState: str = None
     trackedDownloadStatus: str = None
     downloadClientHasPostImportCategory: bool = None
+    requestedDate: str = None
 
 # Tautulli
 class TautulliStream(NamedTuple):
