@@ -296,6 +296,7 @@ class SonarrEpisode(NamedTuple):
     title: str = None
     tvdbId: int = None
     unverifiedSceneNumbering: bool = None
+    lastSearchTime: str = None
 
 # Sonarr /api/v3/queue
 class SonarrQueue(NamedTuple):
@@ -403,6 +404,7 @@ class RadarrQueue(NamedTuple):
     trackedDownloadState: str = None
     trackedDownloadStatus: str = None
     downloadClientHasPostImportCategory: bool = None
+    requestedDate: str = None
 
 # Tautulli
 class TautulliStream(NamedTuple):
