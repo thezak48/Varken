@@ -375,6 +375,7 @@ class RadarrMovie(NamedTuple):
     youTubeTrailerId: str = None
     movieFileId: int = None
     releaseDate: str = None
+    lastSearchTime: str = None
 
 # Radarr Queue Details /api/v3/queue
 class RadarrQueue(NamedTuple):
