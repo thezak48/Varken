@@ -9,6 +9,7 @@ GeoLite2-City.mmdb
 GeoLite2-City.tar.gz
 data/varken.ini
 .idea/
+.vscode/
 varken-venv/
 venv/
 logs/

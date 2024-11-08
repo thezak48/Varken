@@ -111,29 +111,29 @@ class QueuePages(NamedTuple):
     records: list = None
 
 
-# Ombi Structures
+# Ombi /api/v1/Request/count
 class OmbiRequestCounts(NamedTuple):
     approved: int = 0
     available: int = 0
     pending: int = 0
 
-
+# Ombi /api/v1/Issues/count
 class OmbiIssuesCounts(NamedTuple):
     inProgress: int = 0
     pending: int = 0
     resolved: int = 0
 
-
+# Ombi /api/v1/rRequest/tv
 class OmbiTVRequest(NamedTuple):
     background: str = None
     childRequests: list = None
-    denied: bool = None
-    deniedReason: None = None
+    denied: bool = None # Not listed in Ombi API reference
+    deniedReason: None = None # Not listed in Ombi API reference
     externalProviderId: str = None
     id: int = None
     imdbId: str = None
     languageProfile: str = None
-    markedAsDenied: str = None
+    markedAsDenied: str = None # Not listed in Ombi API reference
     overview: str = None
     posterPath: str = None
     qualityOverride: None = None
@@ -143,10 +143,10 @@ class OmbiTVRequest(NamedTuple):
     title: str = None
     totalSeasons: int = None
     tvDbId: int = None
-    requestedByAlias: str = None
+    requestedByAlias: str = None # Not listed in Ombi API reference
     requestStatus: str = None
 
-
+# Ombi /api/v1/Request/movie
 class OmbiMovieRequest(NamedTuple):
     approved: bool = None
     approved4K: bool = None
@@ -167,7 +167,7 @@ class OmbiMovieRequest(NamedTuple):
     issueId: None = None
     issues: None = None
     langCode: str = None
-    languageCode: str = None
+    # languageCode: str = None # Not listed in Ombi API reference
     markedAsApproved: str = None
     markedAsApproved4K: str = None
     markedAsAvailable: None = None
@@ -175,6 +175,7 @@ class OmbiMovieRequest(NamedTuple):
     markedAsDenied: str = None
     markedAsDenied4K: str = None
     overview: str = None
+    playedByUsersCount: int = None # May or may not work
     posterPath: str = None
     qualityOverride: int = None
     released: bool = None
@@ -193,7 +194,7 @@ class OmbiMovieRequest(NamedTuple):
     subscribed: bool = None
     theMovieDbId: int = None
     title: str = None
-
+    watchedByRequestedUser: bool = None # May or may not work
 
 # Overseerr /api/v1/request/count
 class OverseerrRequestCounts(NamedTuple):

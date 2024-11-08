@@ -2,87 +2,79 @@ from logging import getLogger
 from requests import Session, Request
 from datetime import datetime, timezone
 
-from varken.helpers import connection_handler
+#from varken.helpers import connection_handler
 
 
 class UniFiAPI(object):
     def __init__(self, server, dbmanager):
         self.dbmanager = dbmanager
         self.server = server
-        self.site = self.server.site
-        # Create session to reduce server web thread load, and globally define pageSize for all requests
+        self.username = server.username
+        self.password = server.password
+        self.baseurl = server.url
+        self.site = server.site if server.site else 'default'
         self.session = Session()
         self.logger = getLogger()
-        self.get_retry = True
-        self.get_cookie()
-        self.get_site()
 
-    def __repr__(self):
-        return f"<unifi-{self.server.id}>"
-
-    def get_cookie(self):
-        endpoint = '/api/login'
-        pre_cookies = {'username': self.server.username, 'password': self.server.password, 'remember': True}
-        req = self.session.prepare_request(Request('POST', self.server.url + endpoint, json=pre_cookies))
-        post = connection_handler(self.session, req, self.server.verify_ssl, as_is_reply=True)
-
-        if not post or not post.cookies.get('unifises'):
-            self.logger.error("Could not retrieve session cookie from UniFi Controller")
-            return
-
-        cookies = {'unifises': post.cookies.get('unifises')}
-        self.session.cookies.update(cookies)
-
-    def get_site(self):
-        endpoint = '/api/self/sites'
-        req = self.session.prepare_request(Request('GET', self.server.url + endpoint))
-        get = connection_handler(self.session, req, self.server.verify_ssl)
-
-        if not get:
-            self.logger.error("Could not get list of sites from UniFi Controller")
-            return
-        site = [site['name'] for site in get['data'] if site['name'].lower() == self.server.site.lower()
-                or site['desc'].lower() == self.server.site.lower()]
-        if site:
-            self.site = site[0]
+    def login(self):
+        endpoint = '/api/auth/login'
+        data = {'username': self.username, 'password': self.password}
+        headers = {'Content-Type': 'application/json'}
+        url = self.baseurl + endpoint
+        response = self.session.post(url, json=data, headers=headers, verify=False)
+        
+        if response.status_code == 200:
+            self.logger.debug("UniFi login successful")
+            return True
         else:
-            self.logger.error(f"Could not map site {self.server.site} to a site id/alias")
+            self.logger.error("Login failed")
+            return False
+
+    def logout(self):
+        endpoint = '/api/auth/logout'
+        self.session.get(self.baseurl + endpoint, verify=False)
+        self.logger.debug("UniFi logout successful")
 
     def get_usg_stats(self):
+        if not self.login():
+            return
+        
         now = datetime.now(timezone.utc).astimezone().isoformat()
-        endpoint = f'/api/s/{self.site}/stat/device'
-        req = self.session.prepare_request(Request('GET', self.server.url + endpoint))
-        get = connection_handler(self.session, req, self.server.verify_ssl)
+        endpoint = f'/proxy/network/api/s/{self.site}/stat/device'
+        headers = {'Content-Type': 'application/json'}
+        data = {}
+        url = self.baseurl + endpoint
+        self.logger.debug("UniFi URL Endpoint: %s", url)
+        
+        response = self.session.get(url, json=data, headers=headers, verify=False)
 
-        if not get:
-            if self.get_retry:
-                self.get_retry = False
-                self.logger.error("Attempting to reauthenticate for unifi-%s", self.server.id)
-                self.get_cookie()
-                self.get_usg_stats()
-            else:
-                self.get_retry = True
-                self.logger.error("Disregarding Job get_usg_stats for unifi-%s", self.server.id)
+        #self.logger.debug("Response: %s", response.text)
+        
+        if response.status_code != 200:
+            self.logger.error("Failed to get USG stats")
+            self.logout()
             return
-
-        if not self.get_retry:
-            self.get_retry = True
-
-        devices = {device['name']: device for device in get['data'] if device.get('name')}
-
-        if devices.get(self.server.usg_name):
-            device = devices[self.server.usg_name]
-        else:
+        
+        data = response.json()
+        
+        #self.logger.debug("Data: %s", data)
+        devices = {device['name']: device for device in data['data'] if device.get('name')}
+        
+        if self.server.usg_name not in devices:
             self.logger.error("Could not find a USG named %s from your UniFi Controller", self.server.usg_name)
+            self.logout()
             return
+        
+        device = devices[self.server.usg_name]
 
         try:
             influx_payload = [
                 {
                     "measurement": "UniFi",
                     "tags": {
-                        "model": device['model'],
-                        "name": device['name']
+                        "site": self.site,
+                        "device": device['name'],
+                        "type": "USG"
                     },
                     "time": now,
                     "fields": {
@@ -101,4 +93,6 @@ class UniFiAPI(object):
             ]
             self.dbmanager.write_points(influx_payload)
         except KeyError as e:
-            self.logger.error('Error building payload for unifi. Discarding. Error: %s', e)
+            self.logger.error('Error building paylod for unifi. Discarding. Error: %s', e)
+            
+        self.logout()
