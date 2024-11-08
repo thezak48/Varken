@@ -6,7 +6,7 @@ logger = getLogger('temp')
 # Check for python3.6 or newer to resolve erroneous typing.NamedTuple issues
 if version_info < (3, 6, 2):
     logger.error('Varken requires python3.6.2 or newer. You are on python%s.%s.%s - Exiting...',
-                 version_info.major, version_info.minor, version_info.micro)
+                version_info.major, version_info.minor, version_info.micro)
     exit(1)
 
 
@@ -207,29 +207,36 @@ class OverseerrIssuesCounts(NamedTuple):
     open: int = 0
     closed: int = 0
 
-
-# Sonarr
+# Sonarr /api/v3/series
 class SonarrTVShow(NamedTuple):
     added: str = None
+    addOptions = dict = None # May or may not work
     airTime: str = None
     alternateTitles: list = None
     certification: str = None
     cleanTitle: str = None
     ended: bool = None
+    episodesChanged: bool = None # May or may not work
     firstAired: str = None
+    folder: str = None # May or may not work
     genres: list = None
     id: int = None
     images: list = None
     imdbId: str = None
-    languageProfileId: int = None
+    # languageProfileId: int = None # Deprecated, may or may not while disabled
+    lastAired: str = None # May or may not work
     monitored: bool = None
+    monitorNewItems: str = None # May or may not work
     nextAiring: str = None
     network: str = None
+    originalLanguage: str = None
     overview: str = None
     path: str = None
     previousAiring: str = None
+    profileName: str = None
     qualityProfileId: int = None
     ratings: dict = None
+    remotePoster: str = None # May or may not work
     rootFolderPath: str = None
     runtime: int = None
     seasonFolder: bool = None
@@ -245,69 +252,76 @@ class SonarrTVShow(NamedTuple):
     tvMazeId: int = None
     tvRageId: int = None
     useSceneNumbering: bool = None
-    originalLanguage: str = None
     year: int = None
 
-
+# Sonarr Episode /api/v3/episode
 class SonarrEpisode(NamedTuple):
     absoluteEpisodeNumber: int = None
     airDate: str = None
     airDateUtc: str = None
+    endTime: str = None # May or may not work
+    episodeFile: dict = None # Might work as dict
     episodeFileId: int = None
     episodeNumber: int = None
+    finaleType: str = None # May or may not work
+    grabDate: str = None # May or may not work
     grabbed: bool = None
     hasFile: bool = None
     id: int = None
+    images: list = None
     monitored: bool = None
     overview: str = None
-    seasonNumber: int = None
-    seriesId: int = None
-    title: str = None
-    unverifiedSceneNumbering: bool = None
+    runtime: int = None
     sceneAbsoluteEpisodeNumber: int = None
     sceneEpisodeNumber: int = None
     sceneSeasonNumber: int = None
+    seasonNumber: int = None
     series: SonarrTVShow = None
-    runtime: int = None
+    seriesId: int = None
+    seriesTitle: str = None
+    title: str = None
     tvdbId: int = None
+    unverifiedSceneNumbering: bool = None
 
-
+# Sonarr /api/v3/queue/details
 class SonarrQueue(NamedTuple):
     customFormats: list = None
+    customFormatScore: int = None
     downloadClient: str = None
     downloadId: str = None
+    episode: SonarrEpisode = None
+    episodeHasFile: bool = None
     episodeId: int = None
+    errorMessage: str = None
+    estimatedCompletionTime: str = None
     id: int = None
     indexer: str = None
     languages: list = None
+    outputPath: str = None
     protocol: str = None
     quality: dict = None
+    seasonNumber: int = None
+    series: SonarrTVShow = None
+    seriesId: int = None
     size: float = None
     sizeleft: float = None
     status: str = None
     statusMessages: list = None
+    timeleft: str = None
     title: str = None
     trackedDownloadState: str = None
     trackedDownloadStatus: str = None
-    seriesId: int = None
-    seasonNumber: int = None
-    errorMessage: str = None
-    outputPath: str = None
-    series: SonarrTVShow = None
-    episode: SonarrEpisode = None
-    timeleft: str = None
-    estimatedCompletionTime: str = None
-    episodeHasFile: bool = None
-
 
 # Radarr
 class RadarrMovie(NamedTuple):
     added: str = None
+    addOptions: str = None
     alternateTitles: list = None
     certification: str = None
     cleanTitle: str = None
     collection: dict = None
     digitalRelease: str = None
+    folder: str = None # May or may not work
     folderName: str = None
     genres: list = None
     hasFile: bool = None
@@ -319,58 +333,60 @@ class RadarrMovie(NamedTuple):
     minimumAvailability: str = None
     monitored: bool = None
     movieFile: dict = None
+    originalLanguage: str = None
     originalTitle: str = None
     overview: str = None
     path: str = None
+    popularity: str = None
     physicalRelease: str = None
+    physicalReleaseNote: str = None # May or may not work
     qualityProfileId: int = None
     ratings: dict = None
+    remotePoster: str = None # May or may not work
     rootFolderPath: str = None
     runtime: int = None
     secondaryYear: int = None
     secondaryYearSourceId: int = None
     sizeOnDisk: float = None
     sortTitle: str = None
-    statistics: dict = None
+    # statistics: dict = None # Deprecated, may or may not work while disabled
     status: str = None
     studio: str = None
     tags: list = None
+    title: str = None
     titleSlug: str = None
     tmdbId: int = None
     website: str = None
     year: int = None
     youTubeTrailerId: str = None
-    title: str = None
-    originalLanguage: str = None
-    addOptions: str = None
-    popularity: str = None
+    
+    
 
 
-# Radarr Queue
+# Radarr Queue Details /api/v3/queue/details
 class RadarrQueue(NamedTuple):
     customFormats: list = None
+    customFormatScore: int = None # May or May not work
     downloadClient: str = None
     downloadId: str = None
+    errorMessage: str = None
+    estimatedCompletionTime: str = None
     id: int = None
     indexer: str = None
     languages: list = None
+    movie: RadarrMovie = None
     movieId: int = None
+    outputPath: str = None
     protocol: str = None
     quality: dict = None
     size: float = None
     sizeleft: float = None
     status: str = None
     statusMessages: list = None
+    timeleft: str = None
     title: str = None
     trackedDownloadState: str = None
     trackedDownloadStatus: str = None
-    timeleft: str = None
-    estimatedCompletionTime: str = None
-    errorMessage: str = None
-    outputPath: str = None
-    movie: RadarrMovie = None
-    timeleft: str = None
-
 
 # Tautulli
 class TautulliStream(NamedTuple):
