@@ -155,13 +155,15 @@ class INIParser(object):
 
             username = env.get('VRKN_INFLUXDB_USERNAME', self.config.get('influxdb', 'username'))
             password = env.get('VRKN_INFLUXDB_PASSWORD', self.config.get('influxdb', 'password'))
+
+            org = env.get('VRKN_INFLUXDB_ORG', self.config.get('influxdb', 'org'))
         except NoOptionError as e:
             self.logger.error('Missing key in %s. Error: %s', "influxdb", e)
             self.rectify_ini()
             return
 
         self.influx_server = InfluxServer(url=url, port=port, username=username, password=password, ssl=ssl,
-                                          verify_ssl=verify_ssl)
+                                          verify_ssl=verify_ssl, org=org)
 
         # Check for all enabled services
         for service in self.services:
@@ -234,11 +236,18 @@ class INIParser(object):
                             fallback_ip = env.get(f'VRKN_{envsection}_FALLBACK_IP',
                                                   self.config.get(section, 'fallback_ip'))
 
+                            get_libraries = boolcheck(env.get(f'VRKN_{envsection}_GET_LIBRARIES',
+                                                          self.config.get(section, 'get_libraries')))
+
                             get_stats = boolcheck(env.get(f'VRKN_{envsection}_GET_STATS',
                                                           self.config.get(section, 'get_stats')))
 
                             get_activity = boolcheck(env.get(f'VRKN_{envsection}_GET_ACTIVITY',
                                                              self.config.get(section, 'get_activity')))
+
+                            get_libraries_run_days = int(env.get(
+                                f'VRKN_{envsection}_GET_LIBRARIES_RUN_DAYS',
+                                self.config.getint(section, 'get_libraries_run_days')))
 
                             get_activity_run_seconds = int(env.get(
                                 f'VRKN_{envsection}_GET_ACTIVITY_RUN_SECONDS',
@@ -259,9 +268,10 @@ class INIParser(object):
                                                           self.config.get('global', 'maxmind_license_key'))
 
                             server = TautulliServer(id=server_id, url=scheme + url, api_key=apikey,
-                                                    verify_ssl=verify_ssl, get_activity=get_activity,
-                                                    fallback_ip=fallback_ip, get_stats=get_stats,
-                                                    get_activity_run_seconds=get_activity_run_seconds,
+                                                    verify_ssl=verify_ssl, get_libraries=get_libraries,
+                                                    get_libraries_run_days=get_libraries_run_days,
+                                                    get_activity=get_activity, fallback_ip=fallback_ip,
+                                                    get_stats=get_stats, get_activity_run_seconds=get_activity_run_seconds,
                                                     get_stats_run_seconds=get_stats_run_seconds,
                                                     maxmind_license_key=maxmind_license_key)
 

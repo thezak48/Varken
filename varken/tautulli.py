@@ -2,7 +2,7 @@ from logging import getLogger
 from requests import Session, Request
 from geoip2.errors import AddressNotFoundError
 from datetime import datetime, timezone, date, timedelta
-from influxdb.exceptions import InfluxDBClientError
+from influxdb_client.client.exceptions import InfluxDBError
 
 from varken.structures import TautulliStream
 from varken.helpers import hashit, connection_handler, itemgetter_with_default
@@ -187,6 +187,37 @@ class TautulliAPI(object):
 
         self.dbmanager.write_points(influx_payload)
 
+    def get_libraries(self):
+        now = datetime.now(timezone.utc).astimezone().isoformat()
+        influx_payload = []
+        params = {'cmd': 'get_libraries'}
+
+        req = self.session.prepare_request(Request('GET', self.server.url + self.endpoint, params=params))
+        g = connection_handler(self.session, req, self.server.verify_ssl)
+
+        if not g:
+            return
+
+        get = g['response']['data']
+
+        for library in get:
+            data = {
+                    "measurement": "Tautulli",
+                    "tags": {
+                        "type": "library_stats",
+                        "server": self.server.id,
+                        "name": library['section_name'],
+                        "section_type": library['section_type']
+                    },
+                    "time": now,
+                    "fields": {
+                        "libraries": str(library['section_name'])
+                    }
+            }
+            influx_payload.append(data)
+        
+        self.dbmanager.write_points(influx_payload)
+
     def get_stats(self):
         now = datetime.now(timezone.utc).astimezone().isoformat()
         influx_payload = []
@@ -363,7 +394,7 @@ class TautulliAPI(object):
             )
             try:
                 self.dbmanager.write_points(influx_payload)
-            except InfluxDBClientError as e:
+            except InfluxDBError as e:
                 if "beyond retention policy" in str(e):
                     self.logger.debug('Only imported 30 days of data per retention policy')
                 else:
